@@ -1,0 +1,38 @@
+services:
+  web:
+    # build: . # use Dockerfile
+    image: yorkknew/eshop:1.0 # use image
+    container_name: eshop-web
+    ports:
+      - "80:80"
+    # volumes: # use Dockerfile
+    #   - ./:/var/www/html:delegated # use Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost/"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  db:
+    image: mysql:5.7
+    container_name: eshop-db
+    command: --character-set-server=utf8 --collation-server=utf8_general_ci
+    environment:
+      MYSQL_DATABASE: "ecommerce"
+      MYSQL_USER: "eshop"
+      MYSQL_PASSWORD: "eshop"
+      MYSQL_ROOT_PASSWORD: "root"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./ecommerce.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -proot --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  db_data:
