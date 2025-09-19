@@ -95,19 +95,19 @@ volumes:
 
 Démarrage (arrière-plan)
 
-```yaml
+```bash
 docker compose up -d
 ```
 
 Ouvrir le site : http://localhost/
 
 Stop/clean :
-```yaml
+```bash
 docker compose down
 ```
 
 Pour réinitialiser la DB (et réimporter ecommerce.sql au prochain up) :
-```yaml
+```bash
 docker compose down -v
 ```
 
